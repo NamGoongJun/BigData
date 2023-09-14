@@ -4,6 +4,7 @@ from tkinter import messagebox
 
 def press_enter_key(ev):
     click_button()
+    messagebox.showinfo('coordinate value', f"({ev.x}, {ev.y})")
 
 def click_button():
     try:
@@ -15,7 +16,7 @@ def click_button():
         messagebox.showerror('Error', f"입력 값이 없습니다.\n{err}")
 
 window = tk.Tk()
-window.title('numpy gui version v1.7')
+window.title('numpy gui version v1.8')
 window.geometry('300x150')
 
 # create widget
