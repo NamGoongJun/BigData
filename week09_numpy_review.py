@@ -1,24 +1,16 @@
-import pandas as pd
 import numpy as np
 
-df = pd.DataFrame({
-    'A' : [1, 2, np.nan, 4],
-    'B' : [5, np.nan, 7, 8],
-    'C' : [9, 10, 11, np.nan]
-})
+data = np.array([
+    [1, 5, 9],
+    [2, np.nan, 10],
+    [np.nan, 7 , 11],
+    [4, 8, np.nan]
+])
+print(data)
 
-# # 결측치 처리하는 방법 1
-# df.fillna(df.mean(), inplace=True) # inplace=True 는 현제 데이터 프레임을 교체
-# print(df)
-
-# # 2
-# for col in df.columns:
-#     # print(col)
-#     df[col] = np.where(pd.isnull(df[col]), np.mean(df[col]), df[col])
-# print(df)
-
-# 3
-from sklearn.impute import SimpleImputer # 결측값 전용 처리 클래스 활용
-i = SimpleImputer(strategy='mean') # median, most frequent
-df = pd.DataFrame(i.fit_transform(df), columns=df.columns)
-print(df)
+means = np.nanmean(data, axis=0) # 각 column의 평균 값들
+# print(means)
+for i in range(data.shape[1]):
+    mask = np.isnan(data[:, i]) # True, False 값을 갖는 배열 생성
+    data[mask, i] = means[i]
+print(data)
