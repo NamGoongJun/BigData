@@ -1,14 +1,24 @@
+import pandas as pd
 import numpy as np
 
-def info(x):
-    print(f"배열의 차원(rank)은 {x.ndim}차원 입니다.")
-    print(f"배열의 shpae는 {x.shape}입니다.")
-    print(f"원소의 개수는 {x.size}개 입니다.")
+df = pd.DataFrame({
+    'A' : [1, 2, np.nan, 4],
+    'B' : [5, np.nan, 7, 8],
+    'C' : [9, 10, 11, np.nan]
+})
 
+# # 결측치 처리하는 방법 1
+# df.fillna(df.mean(), inplace=True) # inplace=True 는 현제 데이터 프레임을 교체
+# print(df)
 
-np_1d = np.arange(1, 20, 2)
-print(np_1d)
-info(np_1d)
-np_1d = np_1d.reshape(1, 2, 5) # 면, 행, 열
-print(np_1d)
-info(np_1d)
+# # 2
+# for col in df.columns:
+#     # print(col)
+#     df[col] = np.where(pd.isnull(df[col]), np.mean(df[col]), df[col])
+# print(df)
+
+# 3
+from sklearn.impute import SimpleImputer # 결측값 전용 처리 클래스 활용
+i = SimpleImputer(strategy='mean') # median, most frequent
+df = pd.DataFrame(i.fit_transform(df), columns=df.columns)
+print(df)
