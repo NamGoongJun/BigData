@@ -8,6 +8,8 @@ df1 = pd.DataFrame(
 )
 print(df1)
 print(df1.sort_values('MAT'))
+df1 = df1.drop(columns=['ENG'])
+print(df1)
 
 df2 = pd.DataFrame(
     [[99, 89, 100],
@@ -24,5 +26,4 @@ df2 = (pd.melt(df2)
        .query('score >= 90')
        .sort_values('score', ascending=False)
        )
-
 print(df2)
