@@ -1,5 +1,4 @@
 import pandas as pd
-
 df1 = pd.DataFrame(
     {
         "KOR": [99, 91, 100],
@@ -7,7 +6,7 @@ df1 = pd.DataFrame(
         "MAT": [100, 90, 85],
     }, index=[1, 2, 3]
 )
-print(df1)
+# print(df1)
 
 df2 = pd.DataFrame(
     [[99, 89, 100],
@@ -16,4 +15,12 @@ df2 = pd.DataFrame(
     index=[1, 2, 3],
     columns=['KOR', 'ENG', 'MAT']
 )
+print(df2)
+df2 = (pd.melt(df2)
+       .rename(columns={
+        'variable': 'subject',
+        'value': 'score'})
+       .query('score >= 90')
+       )
+
 print(df2)
