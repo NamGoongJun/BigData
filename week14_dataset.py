@@ -1,35 +1,24 @@
-"""
-1) 생존자와 사망자 수를 구하시오.
-2) 남성과 여성의 생존률을 구하시오.
-3) 객실 등급별 생존자 수를 구하시오.
-4) 나이대별 생존자 수를 구하시오. (10대 20대 이렇게)
-"""
 import seaborn as sns
-import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
 
-titanic = sns.load_dataset('titanic')
-print(titanic.info())
-print(titanic.head())
+titanic = sns.load_dataset('titanic') # 데이터 로딩
+# print(titanic.info())
+titanic = titanic.drop(['who', 'deck', 'embark_town', 'alive', 'class', 'adult_male', 'alone'], axis=1) # 불필요한 열 제거
+titanic = titanic.dropna() # 결측치가 있는 행 제거
+# 수치 데이터가 아닌 피쳐를 숫자로 변환
+titanic['sex'] = titanic['sex'].map({'male' : 0, 'female' : 1})
+titanic['embarked'] = titanic['embarked'].map({'S' : 0, 'C' : 1, 'Q' : 2})
+# 특성, 타켓 분리
+X = titanic.drop('survived', axis=1)
+y = titanic['survived']
 
-# 1)
-survived_people = titanic[titanic["survived"] == 1]["survived"].count()
-dead_people = titanic[titanic["survived"] == 0]["survived"].count()
-print(f"생존자 수 : {survived_people}명")
-print(f"생존자 수 : {dead_people}명")
+# 훈련, 테스트 셋 분리
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.15, random_state=1)
+# 모델 생성
+model = LogisticRegression(solver='liblinear') # 로지스틱 회귀 모델 적용
+model.fit(X_train, y_train)
 
-# 2)
-male_survived = titanic[(titanic["survived"] == 1) & (titanic["sex"] == "male")]["survived"].count()
-female_survived = titanic[(titanic["survived"] == 1) & (titanic["sex"] == "female")]["survived"].count()
-male_count = titanic[(titanic["sex"] == "male")]["sex"].count()
-female_count = titanic[(titanic["sex"] == "female")]["sex"].count()
-print(male_count, female_count)
-print(male_survived/male_count, female_survived/female_count)
-
-# 3)
-pclass_survived = titanic.groupby('pclass')['survived'].sum()
-# pclass_survived = titanic[titanic['survived']==1].groupby(['pclass']).size()
-print(pclass_survived)
-
-# 4)
-age_survived = titanic.groupby(pd.cut(titanic['age'], bins=range(0, 81, 10)))['survived'].sum()
-print(age_survived)
+y_pred = model.predict(X_test)
+print(f"정확도 : {accuracy_score(y_test, y_pred)}")
