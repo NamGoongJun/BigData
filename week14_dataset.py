@@ -1,6 +1,7 @@
 """
 1) 생존자와 사망자 수를 구하시오.
 2) 남성과 여성의 생존률을 구하시오.
+3) 객실 등급별 생존자 수를 구하시오.
 """
 import seaborn as sns
 import pandas as pd
@@ -22,3 +23,8 @@ male_count = titanic[(titanic["sex"] == "male")]["sex"].count()
 female_count = titanic[(titanic["sex"] == "female")]["sex"].count()
 print(male_count, female_count)
 print(male_survived/male_count, female_survived/female_count)
+
+# 3)
+pclass_survived = titanic.groupby('pclass')['survived'].sum()
+# pclass_survived = titanic[titanic['survived']==1].groupby(['pclass']).size()
+print(pclass_survived)
